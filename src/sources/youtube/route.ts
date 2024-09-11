@@ -45,19 +45,26 @@ youtube.get("/:id", async (req, res) => {
             })
         }
     } else {
-        const { body } = await tube.session.http.fetch_function(`${vid.data.url!}&cpn=${vid.info.cpn}`, {
-            headers: Constants.STREAM_HEADERS,
-            method: "GET",
-            signal: abort.signal
-        })
-        const readable = await transformReadStream(body!)
-
-        res.writeHead(200, {
-            "content-type": vid.data.mime_type,
-            "content-length": total
-        })
-
-        readable.pipe(res)
+        try {
+            const { body } = await tube.session.http.fetch_function(`${vid.data.url!}&cpn=${vid.info.cpn}`, {
+                headers: Constants.STREAM_HEADERS,
+                method: "GET",
+                signal: abort.signal
+            })
+            const readable = await transformReadStream(body!)
+    
+            res.writeHead(200, {
+                "content-type": vid.data.mime_type,
+                "content-length": total
+            })
+    
+            readable.pipe(res)
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                "message": "internal server error"
+            })
+        }
     }
 })
 
