@@ -9,7 +9,7 @@ Streamer is a backend written in NodeJS and TypeScript to download from various 
 
 # Setting up the project.
 
-Streamer can be hosted on any platfrom that is able to run NodeJS. Just fill out the config and start using it!
+Streamer can be hosted on any platfrom that is able to run NodeJS. Just rename .env.example to .env, fill out the information and volia, it just works.
 
 # Current sources
 
