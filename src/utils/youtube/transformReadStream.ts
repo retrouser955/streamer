@@ -1,7 +1,7 @@
 import { PassThrough } from "node:stream"
 import { Utils } from "youtubei.js";
 
-export async function transformReadStream(stream: ReadableStream<Uint8Array>) {
+export function transformReadStream(stream: ReadableStream<Uint8Array>) {
     const passthrough = new PassThrough({
         highWaterMark: 1024 * 512
     });
