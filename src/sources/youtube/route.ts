@@ -87,9 +87,15 @@ youtube.get("/:id", async (req, res) => {
         let [partStart, partEnd] = req.headers.range.replace(/bytes=/, "").split("-")
         let start = parseInt(partStart, 10)
         let end = partEnd ? parseInt(partEnd, 10) : total - 1
+
+        res.writeHead(206, {
+          'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
+          'Accept-Ranges': 'bytes', 'Content-Length': end,
+          'Content-Type': 'audio/mp4'
+        });
         
         const webReadable = createWebReadableStream(
-            `${vid.data}&cpn=${vid.info.cpn}`,
+            `${vid.data.url!}&cpn=${vid.info.cpn}`,
             end,
             tube,
             start || 0
@@ -100,10 +106,11 @@ youtube.get("/:id", async (req, res) => {
         readable.pipe(res)
     } else {
         const webReadable = createWebReadableStream(
-            `${vid.data}&cpn=${vid.info.cpn}`,
+            `${vid.data.url!}&cpn=${vid.info.cpn}`,
             total,
             tube
         )
+        res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'audio/mp4' });
 
         const readable = transformReadStream(webReadable)
 
